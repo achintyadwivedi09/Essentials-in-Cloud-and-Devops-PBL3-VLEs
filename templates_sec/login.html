@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevSecOps Login</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: linear-gradient(to right, #0f172a, #2563eb);
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* LEFT SIDE */
+        .left {
+            flex: 1;
+            padding: 80px;
+        }
+
+        .left h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .left p {
+            color: #cbd5f5;
+        }
+
+        .stats {
+            margin-top: 30px;
+        }
+
+        .stats span {
+            display: inline-block;
+            margin-right: 15px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        /* RIGHT SIDE */
+        .right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .box {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            width: 300px;
+        }
+
+        .box h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+        <h1>DevSecOps System</h1>
+        <p>Secure your applications with real-time monitoring and vulnerability scanning.</p>
+
+        <div class="stats">
+            <span>🔐 Secure</span>
+            <span>⚡ Fast</span>
+            <span>📊 Live Monitoring</span>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE LOGIN -->
+    <div class="right">
+        <div class="box">
+            <h2>Login</h2>
+            <form action="/auth" method="POST">
+                <input name="username" placeholder="Username" required>
+                <input name="password" type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green2-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: green2
+  template:
+    metadata:
+      labels:
+        app: green2
+    spec:
+      containers:
+      - name: green2-container
+        image: devops-green:v1
+        ports:
+        - containerPort: 5001
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+          requests:
+            memory: "64Mi"
+            cpu: "250m"   

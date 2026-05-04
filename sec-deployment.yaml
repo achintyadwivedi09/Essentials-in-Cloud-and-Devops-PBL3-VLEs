@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sec-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sec-app
+  template:
+    metadata:
+      labels:
+        app: sec-app
+    spec:
+      containers:
+      - name: sec-container
+        image: devsecops-app:v1
+        ports:
+        - containerPort: 5002

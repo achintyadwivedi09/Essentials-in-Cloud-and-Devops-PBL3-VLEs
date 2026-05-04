@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevSecOps Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI';
+            background: #0f172a;
+            color: white;
+        }
+        header {
+            background: #020617;
+            padding: 15px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            padding: 30px;
+        }
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .safe { color: #22c55e; }
+        .warn { color: #facc15; }
+        .danger { color: #ef4444; }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        #log {
+            margin: 20px;
+            padding: 10px;
+            background: black;
+            height: 150px;
+            overflow-y: scroll;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>🔐 DevSecOps Live Security Dashboard</header>
+
+<div class="grid">
+    <div class="card">
+        <h3>Vulnerabilities</h3>
+        <h2 id="vuln" class="safe">0</h2>
+    </div>
+
+    <div class="card">
+        <h3>Dependency Risk</h3>
+        <h2 id="dep" class="warn">Low</h2>
+    </div>
+
+    <div class="card">
+        <h3>Container Health</h3>
+        <h2 id="health" class="safe">Secure</h2>
+    </div>
+
+    <div class="card">
+        <h3>Last Scan</h3>
+        <h2 id="time">--</h2>
+    </div>
+
+    <div class="card">
+        <h3>Live Time</h3>
+        <h2 id="clock">--</h2>
+    </div>
+</div>
+
+<div style="text-align:center;">
+    <button onclick="runScan()">Run Security Scan</button>
+</div>
+
+<div id="log"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// 📊 CHART SETUP
+const ctx = document.createElement('canvas');
+ctx.id = "chart";
+ctx.style.margin = "20px";
+document.body.appendChild(ctx);
+
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Vulnerabilities',
+            data: [],
+            borderColor: '#ef4444',
+            tension: 0.4
+        }]
+    },
+    options: {
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+
+// 🔍 SCAN FUNCTION
+function runScan() {
+    let log = document.getElementById("log");
+    log.innerHTML += "🔍 Running scan...<br>";
+
+    fetch('/scan')
+    .then(res => res.json())
+    .then(data => {
+        let time = new Date().toLocaleTimeString();
+
+        document.getElementById("vuln").innerText = data.vulnerabilities;
+        document.getElementById("time").innerText = time;
+
+        // chart update
+        chart.data.labels.push(time);
+        chart.data.datasets[0].data.push(data.vulnerabilities);
+        chart.update();
+
+        if (data.vulnerabilities > 0) {
+            document.getElementById("vuln").className = "danger";
+            document.getElementById("health").innerText = data.status;
+            document.getElementById("health").className = "warn";
+            log.innerHTML += "⚠️ Threat detected at " + time + "<br>";
+        } else {
+            document.getElementById("vuln").className = "safe";
+            document.getElementById("health").innerText = "Secure";
+            document.getElementById("health").className = "safe";
+            log.innerHTML += "✅ System secure at " + time + "<br>";
+        }
+
+        // auto scroll log
+        log.scrollTop = log.scrollHeight;
+    });
+}
+
+// ⏱ LIVE CLOCK
+function updateClock() {
+    document.getElementById("clock").innerText =
+        new Date().toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// 🤖 AUTO SCAN EVERY 5 SECONDS (IMPRESSIVE FOR DEMO)
+setInterval(runScan, 5000);
+
+// 🎯 BUTTON ANIMATION
+document.querySelector("button").addEventListener("click", () => {
+    document.querySelector("button").innerText = "Scanning...";
+    setTimeout(() => {
+        document.querySelector("button").innerText = "Run Security Scan";
+    }, 2000);
+});
+</script>
+
+</body>
+</html>
